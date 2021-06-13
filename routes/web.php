@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Blog\Admin\CategoryController;
+use App\Http\Controllers\Blog\Admin\PostsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,4 +16,25 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+/*Route::get('layout', function (){
+    return view('layout');
+});
+*/
+
+//Адмінка
+$groupData = ['prefix' => 'admin/blog'];
+
+//Category
+Route::group($groupData, function() {
+    $methods = ['index', 'edit' , 'create','store', 'update'];
+    Route::resource('categories', CategoryController::class)
+        ->only($methods)
+        ->names('blog.admin.categories');
+
+//Posts
+    Route::resource('posts', PostsController::class)
+        ->except(['show'])
+        ->names('blog.admin.posts');
+
 });

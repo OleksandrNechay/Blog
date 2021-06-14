@@ -17,10 +17,10 @@ use App\Http\Controllers\Blog\Admin\PostsController;
 Route::get('/', function () {
     return view('welcome');
 });
-/*Route::get('layout', function (){
-    return view('layout');
+Route::get('layout', function (){
+    return view('layouts.admin_layout');
 });
-*/
+
 
 //Адмінка
 $groupData = ['prefix' => 'admin/blog'];

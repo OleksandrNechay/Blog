@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Blog\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostCreateRequest;
+use App\Http\Requests\PostUpdateRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Repositories\Blog\PostRepository;
@@ -35,7 +37,7 @@ class PostsController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -49,9 +51,9 @@ class PostsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(PostCreateRequest $request)
     {
         $data = $request->input();
         $item = (new Post())->create($data);
@@ -81,10 +83,10 @@ class PostsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Post $post
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function edit($id, Post $post)
+    public function edit($id)
     {
         $item = $this->blogPostRepository->getEdit($id);
         if(empty($item)){
@@ -101,9 +103,9 @@ class PostsController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update($id, Request $request, Post $post)
+    public function update($id, PostUpdateRequest $request)
     {
         $item = $this->blogPostRepository->getEdit($id);
         $data = $request->all();
@@ -130,9 +132,9 @@ class PostsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id, Post $post)
+    public function destroy($id)
     {
         $result = Post::destroy($id);
         if($result){

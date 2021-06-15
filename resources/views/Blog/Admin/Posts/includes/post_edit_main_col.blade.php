@@ -96,4 +96,8 @@
     </div>
 </div>
 
+<script src="{{asset('vendor/unisharp/laravel-ckeditor/ckeditor.js')}}"></script>
 
+<script>
+    CKEDITOR.replace( 'content_raw' );
+</script>

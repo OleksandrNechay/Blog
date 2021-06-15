@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\Category;
 use App\Observers\PostObserver;
 use App\Observers\CategoryObserver;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Post::observe(PostObserver::class);
         Category::observe(CategoryObserver::class);
+        Paginator::useBootstrap();
     }
 }

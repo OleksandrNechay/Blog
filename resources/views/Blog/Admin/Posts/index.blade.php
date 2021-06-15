@@ -1,10 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.admin_layout')
 
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                @include('blog.admin.posts.includes.result_messages')
+                @include('Blog.Admin.Posts.includes.result_messages')
                 <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
                     <a class="btn btn-primary" href="{{ route('blog.admin.posts.create') }}"> Створити </a>
                 </nav>
@@ -21,8 +21,8 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($paginator as $post)
-                                @php /** @var \App\Models\PostCategory $post */ @endphp
+                            @foreach($posts as $post)
+                                @php /** @var \App\Models\Post $post */ @endphp
                                 <tr @if(!$post->is_published) style="background-color:#ccc;" @endif>
                                     <td> {{$post->id}}  </td>
                                     <td> {{$post-> user->name}}</td>
@@ -41,13 +41,13 @@
                 </div>
             </div>
         </div>
-        @if($paginator->total() > $paginator->count())
+        @if($posts->total() > $posts->count())
             <br>
             <div class="row justify-content-center">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            {{$paginator->links()  }}
+                            {{$posts->links()  }}
                         </div>
                     </div>
                 </div>

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Blog\Admin\CategoryController;
 use App\Http\Controllers\Blog\Admin\PostsController;
+use App\Http\Controllers\Blog\Admin\DashboardController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,9 +18,7 @@ use App\Http\Controllers\Blog\Admin\PostsController;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('layout', function (){
-    return view('layouts.admin_layout');
-});
+Route::get('layout', [DashboardController::class, 'dashboard'])->name('layout');
 
 
 //Адмінка

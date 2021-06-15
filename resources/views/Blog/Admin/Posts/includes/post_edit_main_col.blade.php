@@ -1,5 +1,5 @@
 @php
-    /** @var \App\Models\BlogPost $item */
+    /** @var \App\Models\Post $item */
 @endphp
 
 <div class="row justify-content-center">
@@ -95,3 +95,5 @@
         </div>
     </div>
 </div>
+
+

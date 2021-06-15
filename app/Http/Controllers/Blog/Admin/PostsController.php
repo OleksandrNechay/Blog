@@ -30,8 +30,9 @@ class PostsController extends Controller
     }
     public function index()
     {
-        $paginator = $this->blogPostRepository->getAllWithPaginate();
-        return view('blog.admin.posts.index', compact('paginator'));
+        $posts = $this->blogPostRepository->getAllWithPaginate();
+
+        return view('blog.admin.posts.index', compact('posts'));
     }
 
     /**
@@ -41,6 +42,7 @@ class PostsController extends Controller
      */
     public function create()
     {
+
         $item = new Post();
         $categoryList = $this->blogCategoryRepository->getForComboBox();
 

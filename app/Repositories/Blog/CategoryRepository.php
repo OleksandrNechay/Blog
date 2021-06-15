@@ -48,8 +48,7 @@ class CategoryRepository extends CoreRepository
     {
 
         $columns = ['id', 'title', 'parent_id'];
-        $result = $this
-            ->startConditions()
+        $result = $this->startConditions()
             ->select($columns)
             ->with([
                 'parentCategory:id,title',

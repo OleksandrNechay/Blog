@@ -11,7 +11,7 @@ class Post extends Model
     use HasFactory;
     use SoftDeletes;
 
-    const UNKNOWN_USER = 1;
+    //const UNKNOWN_USER = 1;
 
     protected $fillable = [
         'title',
@@ -22,6 +22,9 @@ class Post extends Model
         'is_published',
         'published_at',
     ];
+    /**
+     * @var mixed
+     */
 
     public function Category(){
         return $this->belongsTo(Category::class);

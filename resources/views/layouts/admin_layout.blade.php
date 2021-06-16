@@ -14,6 +14,8 @@
     <link href="{{asset('css/styles.css')}}" rel="stylesheet" />
 
     <script src="{{asset('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js')}}" crossorigin="anonymous"></script>
+    <script src="{{(asset('//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'))}}"></script>
+    <script src="{{asset('//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js')}}"></script>
 
 </head>
 <body class="sb-nav-fixed">

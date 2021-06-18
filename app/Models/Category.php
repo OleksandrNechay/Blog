@@ -33,4 +33,14 @@ class Category extends Model
 
     }
 
+    public function Post(){
+        return $this->hasMany(Post::class);
+    }
+
+    public function scopeLastCategories($query, $count){
+
+        $categories = $query->orderBy('created_at','DESC')->take($count)->get();
+        return $categories;
+    }
+
 }

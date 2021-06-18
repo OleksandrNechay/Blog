@@ -43,6 +43,37 @@
                 </div>
             </div>
         </div>
+   </div>
+
+    <div class="row">
+
+        <div class="col-sm-6">
+            <h3 class="list-group-item"> Останні додані категорії</h3>
+            @foreach($categories as $category)
+                <a class="list-group-item" href="{{route('blog.admin.categories.edit', $category->id)}}">
+                    <h4 class="list-group-item-heading"> {{$category->title}}</h4>
+                    <p class="list-group-item-text">
+                        Кількість матеріалів - {{$category->post()->count()}}
+                    </p>
+                </a>
+
+            @endforeach
+
+        </div>
+
+         <div class="col-sm-6">
+             <h3 class="list-group-item"> Останні додані статті</h3>
+             @foreach($posts as $post)
+            <a class="list-group-item" href="{{route('blog.admin.posts.edit', $post->id)}}">
+                <h4 class="list-group-item-heading"> {{$post->title}}</h4>
+                <p class="list-group-item-text">
+                    Категорія - {{$post->category->title}}
+                </p>
+            </a>
+
+             @endforeach
+        </div>
+
     </div>
 </div>
 @endsection

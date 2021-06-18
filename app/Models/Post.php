@@ -39,4 +39,10 @@ class Post extends Model
     protected $dates = [
         'published_at'
     ];
+
+    public function scopeLastPosts($query, $count){
+
+        $posts = $query->orderBy('created_at','DESC')->take($count)->get();
+        return $posts;
+    }
 }

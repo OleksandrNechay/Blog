@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Collection;
 
 class CategoryRepository extends CoreRepository
 {
-
     protected function getModelClass(){
 
         return Model::class;
@@ -58,5 +57,6 @@ class CategoryRepository extends CoreRepository
 
         return $result;
     }
+
 
 }

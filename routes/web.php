@@ -19,17 +19,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('layout', [DashboardController::class, 'dashboard'])->name('layout');
-
+Route::get('main', [PostsController::class, 'mainPage'])->name('main');
+Route::get('show/{id}',[PostsController::class, 'show'])->name('show');
 
 //Адмінка
 $groupData = ['prefix' => 'admin/blog'];
 
 //Category
 Route::group($groupData, function() {
-    $methods = ['index', 'edit' , 'create','store', 'update'];
+    $methods = ['index', 'edit' , 'create','store', 'update', ];
     Route::resource('categories', CategoryController::class)
         ->only($methods)
         ->names('blog.admin.categories');
+    Route::get('show/categorypost', [DashboardController::class, 'categoryPosts'])->name('categoriesPost');
+    Route::get('show/categoryposts/{id}', [DashboardController::class, 'getPosts'])->name('categoryPosts');
 
 //Posts
     Route::resource('posts', PostsController::class)
@@ -37,3 +40,7 @@ Route::group($groupData, function() {
         ->names('blog.admin.posts');
 
 });
+
+
+
+

@@ -23,7 +23,6 @@ class CategoryController extends Controller
         $this->BlogCategoryRepository = app(CategoryRepository::class);
     }
 
-
     public function index()
     {
         $paginator = $this->BlogCategoryRepository->getAllWithPaginate(10);

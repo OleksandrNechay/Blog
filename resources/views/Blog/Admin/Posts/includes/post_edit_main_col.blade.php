@@ -42,6 +42,7 @@
                                       class = "form-control"
                                       rows= "20"> {{ (old('content_raw', $item->content_raw)) }} </textarea>
                         </div>
+                        <input name="img_url" type="file" class="form-control" placeholder="Image">
                     </div>
                     <div class="tab-pane" id="adddata" role="tabpanel">
                         <div class="form-group">
@@ -96,8 +97,9 @@
     </div>
 </div>
 
-<script src="{{asset('vendor/unisharp/laravel-ckeditor/ckeditor.js')}}"></script>
-
+<script src="{{asset('https://cdn.ckeditor.com/4.13.0/standard/ckeditor.js')}}"></script>
 <script>
-    CKEDITOR.replace( 'content_raw' );
+    CKEDITOR.replace( 'content_raw', {
+        filebrowserUploadUrl:'storage/image'
+    });
 </script>

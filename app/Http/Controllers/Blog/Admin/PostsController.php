@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PostCreateRequest;
 use App\Http\Requests\PostUpdateRequest;
 use App\Models\Post;
-use Illuminate\Http\Request;
 use App\Repositories\Blog\PostRepository;
 use App\Repositories\Blog\CategoryRepository;
 
@@ -27,6 +26,11 @@ class PostsController extends Controller
 
         $this->blogPostRepository = app(PostRepository::class);
         $this->blogCategoryRepository = app(CategoryRepository::class);
+    }
+
+    public function mainPage(){
+        $posts = $this->blogPostRepository->getLastPostsPaginate();
+        return view('blog.user.main_page', compact('posts'));
     }
     public function index()
     {
@@ -77,9 +81,11 @@ class PostsController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show($id)
     {
-        //
+        $post = $this->blogPostRepository->getEdit($id);
+
+        return view('blog.user.show_post', compact('post'));
     }
 
     /**
@@ -109,6 +115,7 @@ class PostsController extends Controller
      */
     public function update($id, PostUpdateRequest $request)
     {
+
         $item = $this->blogPostRepository->getEdit($id);
         $data = $request->all();
 

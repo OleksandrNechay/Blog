@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Blog\Admin\CategoryController;
-use App\Http\Controllers\Blog\Admin\PostsController;
 use App\Http\Controllers\Blog\Admin\DashboardController;
+use App\Http\Controllers\Blog\Admin\PostsController;
+use App\Http\Controllers\Blog\Admin\CategoryController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,7 +18,10 @@ use App\Http\Controllers\Blog\Admin\DashboardController;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('layout', [DashboardController::class, 'dashboard'])->name('layout');
+
+require __DIR__.'/auth.php';
+
+Route::get('dashboard', [DashboardController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');
 Route::get('main', [PostsController::class, 'mainPage'])->name('main');
 Route::get('show/{id}',[PostsController::class, 'show'])->name('show');
 
@@ -31,16 +34,14 @@ Route::group($groupData, function() {
     Route::resource('categories', CategoryController::class)
         ->only($methods)
         ->names('blog.admin.categories');
-    Route::get('show/categorypost', [DashboardController::class, 'categoryPosts'])->name('categoriesPost');
+    Route::get('show/categorypost', [DashboardController::class, 'categoryPosts'])->name('categories');
     Route::get('show/categoryposts/{id}', [DashboardController::class, 'getPosts'])->name('categoryPosts');
 
 //Posts
     Route::resource('posts', PostsController::class)
         ->except(['show'])
         ->names('blog.admin.posts');
-
+    Route::get('posts/published', [PostsController::class, 'published'])->name('published');
+    Route::get('posts/deleted', [PostsController::class, 'deleted'])->name('deleted');
+    Route::get('posts/not_published', [PostsController::class, 'notPublished'])->name('not_published');
 });
-
-
-
-

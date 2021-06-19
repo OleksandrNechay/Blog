@@ -15,6 +15,11 @@ class Category extends Model
         'parent_id',
         'description'
     ];
+
+    public function Post(){
+        return $this->hasMany(Post::class);
+    }
+
     public function parentCategory(){
         return $this->belongsTo(Category::class, 'parent_id', 'id');
     }
@@ -33,9 +38,6 @@ class Category extends Model
 
     }
 
-    public function Post(){
-        return $this->hasMany(Post::class);
-    }
 
     public function scopeLastCategories($query, $count){
 

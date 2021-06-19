@@ -22,10 +22,12 @@
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
     <a class="navbar-brand ps-3" href="{{route('main')}}">Блог</a>
+
+
     <!-- Sidebar Toggle-->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
     <!-- Navbar Search-->
-    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+  <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
         <div class="input-group">
             <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
             <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
@@ -39,7 +41,15 @@
                 <li><a class="dropdown-item" href="#!">Settings</a></li>
                 <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                 <li><hr class="dropdown-divider" /></li>
-                <li><a class="dropdown-item" href="#!">Logout</a></li>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+
+                    <x-dropdown-link :href="route('logout')"
+                                     onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                        {{ __('Log Out') }}
+                    </x-dropdown-link>
+                </form>
             </ul>
         </li>
     </ul>
@@ -50,12 +60,12 @@
             <div class="sb-sidenav-menu">
                 <div class="nav">
                     <div class="sb-sidenav-menu-heading"></div>
-                    <a class="nav-link" href="{{route('layout')}}">
+                    <a class="nav-link" href="{{route('dashboard')}}">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         Головна
                     </a>
 
-                    <a class="nav-link" href="{{route('categoriesPost')}}">
+                    <a class="nav-link" href="{{route('categories')}}">
                         <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                         Категорії
                     </a>
@@ -67,8 +77,9 @@
                     </a>
                     <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="layout-static.html">Опубліковані</a>
-                            <a class="nav-link" href="layout-sidenav-light.html">Неопубліковані</a>
+                            <a class="nav-link" href="{{route('published')}}">Опубліковані</a>
+                            <a class="nav-link" href="{{route('not_published')}}">Неопубліковані</a>
+                            <a class="nav-link" href="{{route('deleted')}}">Видалені</a>
                         </nav>
                     </div>
 

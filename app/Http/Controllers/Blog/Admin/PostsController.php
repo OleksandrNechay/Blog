@@ -6,8 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PostCreateRequest;
 use App\Http\Requests\PostUpdateRequest;
 use App\Models\Post;
+use App\Models\User;
 use App\Repositories\Blog\PostRepository;
 use App\Repositories\Blog\CategoryRepository;
+use Illuminate\Support\Facades\Auth;
+
+
+
 
 class PostsController extends Controller
 {
@@ -27,7 +32,20 @@ class PostsController extends Controller
         $this->blogPostRepository = app(PostRepository::class);
         $this->blogCategoryRepository = app(CategoryRepository::class);
     }
+    public function published(){
+       $posts = $this->blogPostRepository->isPublished();
+       return view('blog.admin.posts.published_posts', compact('posts'));
+    }
+    public function notPublished()
+    {
+        $posts = $this->blogPostRepository->notPublished();
+        return view('blog.admin.posts.notpublished_posts', compact('posts'));
+    }
+    public function deleted(){
+        $posts = $this->blogPostRepository->deleted();
 
+        return view('blog.admin.posts.deleted_posts', compact('posts'));
+    }
     public function mainPage(){
         $posts = $this->blogPostRepository->getLastPostsPaginate();
         return view('blog.user.main_page', compact('posts'));
@@ -47,10 +65,14 @@ class PostsController extends Controller
     public function create()
     {
 
-        $item = new Post();
-        $categoryList = $this->blogCategoryRepository->getForComboBox();
+        if(Auth::check() && (Auth::user()->role_id == 1)) {
+            $item = new Post();
+            $categoryList = $this->blogCategoryRepository->getForComboBox();
 
-        return view('blog.admin.posts.edit', compact('item', 'categoryList'));
+            return view('blog.admin.posts.edit', compact('item', 'categoryList'));
+        }else{
+           return redirect(route('blog.admin.posts.index'));
+        }
     }
 
     /**
@@ -61,17 +83,24 @@ class PostsController extends Controller
      */
     public function store(PostCreateRequest $request)
     {
-        $data = $request->input();
-        $item = (new Post())->create($data);
+        if(Auth::check()) {
+            $data = $request->input();
+            $user = ['user_id' => Auth::user()->id];
+            $result = array_merge($user, $data);
 
-        if($item){
-            return redirect()
-                ->route('blog.admin.posts.edit', [$item->id])
-                ->with(['success' => 'Успішно збережено']);
-        } else {
-            return back()
-                ->withErrors(['msg' => 'Помилка зберігання'])
-                ->withInput();
+            $item = (new Post())->create($result);
+
+            if ($item) {
+                return redirect()
+                    ->route('blog.admin.posts.edit', [$item->id])
+                    ->with(['success' => 'Успішно збережено']);
+            } else {
+                return back()
+                    ->withErrors(['msg' => 'Помилка зберігання'])
+                    ->withInput();
+            }
+        }else{
+            return redirect(route('blog.admin.posts.index'));
         }
     }
 
@@ -96,14 +125,18 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        $item = $this->blogPostRepository->getEdit($id);
-        if(empty($item)){
-            abort(404);
+        if(Auth::check()) {
+            $item = $this->blogPostRepository->getEdit($id);
+            if (empty($item)) {
+                abort(404);
+            }
+
+            $categoryList = $this->blogCategoryRepository->getForComboBox();
+
+            return view('blog.admin.posts.edit', compact('item', 'categoryList'));
+        }else{
+            return redirect(route('blog.admin.posts.index'));
         }
-
-        $categoryList = $this->blogCategoryRepository->getForComboBox();
-
-        return view('blog.admin.posts.edit', compact('item', 'categoryList'));
     }
 
     /**
@@ -115,25 +148,28 @@ class PostsController extends Controller
      */
     public function update($id, PostUpdateRequest $request)
     {
+        if(Auth::check()) {
+            $item = $this->blogPostRepository->getEdit($id);
+            $data = $request->all();
 
-        $item = $this->blogPostRepository->getEdit($id);
-        $data = $request->all();
 
-
-        if(empty($item)){
-            return back()
-                ->withErrors(['msg'=> "Запис id = [{$id}] не знайдено"])
-                ->withInput();
-        }
-        $result = $item->update($data);
-        if($result){
-            return redirect()
-                ->route('blog.admin.posts.edit', $item->id)
-                ->with(['success' => 'Успішно збережено']);
-        } else {
-            return back()
-                ->withErrors(['msg' => 'Помилка зберігання'])
-                ->withInput();
+            if (empty($item)) {
+                return back()
+                    ->withErrors(['msg' => "Запис id = [{$id}] не знайдено"])
+                    ->withInput();
+            }
+            $result = $item->update($data);
+            if ($result) {
+                return redirect()
+                    ->route('blog.admin.posts.edit', $item->id)
+                    ->with(['success' => 'Успішно збережено']);
+            } else {
+                return back()
+                    ->withErrors(['msg' => 'Помилка зберігання'])
+                    ->withInput();
+            }
+        }else{
+            return redirect(route('blog.admin.posts.index'));
         }
     }
 
@@ -145,16 +181,19 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        $result = Post::destroy($id);
-        if($result){
+        if(Auth::check()) {
+            $result = Post::destroy($id);
+            if ($result) {
 
-            return redirect()
-                ->route('blog.admin.posts.index')
-                ->with(['success' => "Запис id [$id] успішно видалено"]);
-        } else {
-            return back()
-                ->withErrors(['msg' => 'Помилка видалення']);
+                return redirect()
+                    ->route('blog.admin.posts.index')
+                    ->with(['success' => "Запис id [$id] успішно видалено"]);
+            } else {
+                return back()
+                    ->withErrors(['msg' => 'Помилка видалення']);
+            }
+        }else{
+            return redirect(route('blog.admin.posts.index'));
         }
-
     }
 }

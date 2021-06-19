@@ -27,6 +27,6 @@ class RoleSeeder extends Seeder
                 'role_name' => 'Авторизований користувач'
             ],
         ];
-        DB::table('Role')->insert($data);
+        DB::table('roles')->insert($data);
     }
 }

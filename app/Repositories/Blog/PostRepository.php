@@ -70,6 +70,59 @@ class PostRepository extends CoreRepository
         return $result;
     }
 
+    public function isPublished()
+    {
+
+        $fields = ['id', 'title', 'slug', 'is_published', 'published_at', 'user_id', 'category_id'];
+        $result = $this->StartConditions()
+            ->select($fields)
+            ->where('is_published', '1')
+            ->with(['category' => function ($query) {
+                $query->select(['id', 'title']);
+            },
+                'user:id,name'
+            ])->paginate(15);
+
+
+        return $result;
+    }
+    public function notPublished()
+    {
+
+        $fields = ['id', 'title', 'slug', 'is_published', 'published_at', 'user_id', 'category_id'];
+        $result = $this->StartConditions()
+            ->select($fields)
+            ->where('is_published', '0')
+            ->with(['category' => function ($query) {
+                $query->select(['id', 'title']);
+            },
+                'user:id,name'
+            ])->paginate(15);
+
+
+        return $result;
+    }
+    public function Deleted()
+    {
+
+        $fields = ['id', 'title', 'slug', 'is_published', 'published_at', 'user_id', 'category_id'];
+        $result = $this->StartConditions()
+            ->select($fields)
+            ->withTrashed()
+            ->whereNotNull('deleted_at')
+            ->with(['category' => function ($query) {
+                $query->select(['id', 'title']);
+            },
+                'user:id,name'
+            ])->paginate(10);
+
+
+        return $result;
+    }
+
+
+
+
 
     public function getEdit($id)
     {

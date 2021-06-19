@@ -33,7 +33,7 @@ class DashboardController extends Controller
 
     public function categoryPosts(){
         $categories = $this->blogCategoryRepository->getAllWithPaginate();
-        return view('blog.admin.category.categories_post', compact('categories'));
+        return view('blog.admin.category.categories', compact('categories'));
     }
     public function getPosts($id){
         $posts = $this->blogPostRepository->postCategory($id);

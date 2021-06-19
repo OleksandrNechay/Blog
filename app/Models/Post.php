@@ -15,6 +15,7 @@ class Post extends Model
 
     protected $fillable = [
         'title',
+        'user_id',
         'slug',
         'category_id',
         'excerpt',
@@ -38,6 +39,7 @@ class Post extends Model
 
     protected $dates = [
         'published_at'
+
     ];
 
     public function scopeLastPosts($query, $count){
@@ -45,4 +47,5 @@ class Post extends Model
         $posts = $query->orderBy('created_at','DESC')->take($count)->get();
         return $posts;
     }
+
 }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Clean Blog - Start Bootstrap Theme</title>
     <link rel="icon" type="image/x-icon" href="{{asset('assets/favicon.ico')}}" />
     <!-- Font Awesome icons (free version)-->
@@ -26,10 +27,29 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="index.html">Home</a></li>
-                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="about.html">About</a></li>
-                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="post.html">Sample Post</a></li>
-                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="contact.html">Contact</a></li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{route('main')}}">Головна</a></li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="about.html">Категорії</a></li>
+
+
+
+               @guest
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{route('login')}}">Авторизуватись</a></li>
+                @endguest
+
+
+                @if(\Auth::check() && Auth::user()->role_id== 1 )
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{route('dashboard')}}">Адмін панель</a></li>
+                 @endif
+                @if(\Auth::check())
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href=""> Профіль</a></li>
+                     <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{route('logout')}}"
+                                            onclick="event.preventDefault();
+                                             document.getElementById('logout-form').submit();">Вийти</a></li>
+
+                @endif
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+                </form>
             </ul>
         </div>
     </div>

@@ -41,7 +41,7 @@ Route::group($groupData, function() {
     Route::resource('posts', PostsController::class)
         ->except(['show'])
         ->names('blog.admin.posts');
-    Route::get('posts/published', [PostsController::class, 'published'])->name('published');
-    Route::get('posts/deleted', [PostsController::class, 'deleted'])->name('deleted');
-    Route::get('posts/not_published', [PostsController::class, 'notPublished'])->name('not_published');
+    Route::get('posts/published', [DashboardController::class, 'published'])->name('published');
+    Route::get('posts/deleted', [DashboardController::class, 'deleted'])->name('deleted');
+    Route::get('posts/not_published', [DashboardController::class, 'notPublished'])->name('not_published');
 });

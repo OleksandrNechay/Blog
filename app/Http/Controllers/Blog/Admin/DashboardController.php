@@ -41,4 +41,19 @@ class DashboardController extends Controller
         return view('blog.admin.category.category_posts', compact('posts'));
     }
 
+    public function published(){
+        $posts = $this->blogPostRepository->isPublished();
+        return view('blog.admin.posts.published_posts', compact('posts'));
+    }
+    public function notPublished()
+    {
+        $posts = $this->blogPostRepository->notPublished();
+        return view('blog.admin.posts.notpublished_posts', compact('posts'));
+    }
+    public function deleted(){
+        $posts = $this->blogPostRepository->deleted();
+
+        return view('blog.admin.posts.deleted_posts', compact('posts'));
+    }
+
 }

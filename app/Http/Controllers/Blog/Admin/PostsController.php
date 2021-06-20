@@ -32,24 +32,12 @@ class PostsController extends Controller
         $this->blogPostRepository = app(PostRepository::class);
         $this->blogCategoryRepository = app(CategoryRepository::class);
     }
-    public function published(){
-       $posts = $this->blogPostRepository->isPublished();
-       return view('blog.admin.posts.published_posts', compact('posts'));
-    }
-    public function notPublished()
-    {
-        $posts = $this->blogPostRepository->notPublished();
-        return view('blog.admin.posts.notpublished_posts', compact('posts'));
-    }
-    public function deleted(){
-        $posts = $this->blogPostRepository->deleted();
-
-        return view('blog.admin.posts.deleted_posts', compact('posts'));
-    }
+    
     public function mainPage(){
         $posts = $this->blogPostRepository->getLastPostsPaginate();
         return view('blog.user.main_page', compact('posts'));
     }
+
     public function index()
     {
         $posts = $this->blogPostRepository->getAllWithPaginate();

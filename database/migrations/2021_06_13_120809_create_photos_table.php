@@ -15,6 +15,8 @@ class CreatePhotosTable extends Migration
     {
         Schema::connection('mysql2')->create('photos', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('post_id');
+
             $table->string('photos_name');
             $table->string('photo_path');
             $table->string('photo_url');

@@ -119,6 +119,15 @@ class PostRepository extends CoreRepository
 
         return $result;
     }
+   /* public  function getPhoto($id){
+        $img = $this->StartConditions()
+            ->find($id)
+            ->select('photo_path')
+            ->where('post_id', $id)
+            ->get();
+
+        return $img;
+    }*/
 
 
 

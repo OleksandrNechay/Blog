@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Blog\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostCreateRequest;
 use App\Http\Requests\PostUpdateRequest;
+use App\Models\Photo;
 use App\Models\Post;
-use App\Models\User;
+
+use App\Repositories\Blog\PhotoRepository;
 use App\Repositories\Blog\PostRepository;
 use App\Repositories\Blog\CategoryRepository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+
 
 
 
@@ -25,14 +30,15 @@ class PostsController extends Controller
     private $blogPostRepository;
 
     private $blogCategoryRepository;
+    private $blogPhotoRepository;
 
     public function __construct()
     {
-
+        $this->blogPhotoRepository = app(PhotoRepository::class);
         $this->blogPostRepository = app(PostRepository::class);
         $this->blogCategoryRepository = app(CategoryRepository::class);
     }
-    
+
     public function mainPage(){
         $posts = $this->blogPostRepository->getLastPostsPaginate();
         return view('blog.user.main_page', compact('posts'));
@@ -59,7 +65,7 @@ class PostsController extends Controller
 
             return view('blog.admin.posts.edit', compact('item', 'categoryList'));
         }else{
-           return redirect(route('blog.admin.posts.index'));
+           return view('blog.access_denied401');
         }
     }
 
@@ -75,12 +81,23 @@ class PostsController extends Controller
             $data = $request->input();
             $user = ['user_id' => Auth::user()->id];
             $result = array_merge($user, $data);
+            $post = (new Post())->create($result);
 
-            $item = (new Post())->create($result);
 
-            if ($item) {
+            $file = $request->file('image');
+            if(isset($file)) {
+                $img = $request->file('image')->store('images', 'public');
+                $name = $file->getClientOriginalName();
+                $url = Str::slug($name);
+
+                $image = ['post_id'=> $post->id, 'photos_name' => $name,'photo_url' => $url, 'photo_path' => $img];
+
+                $img = (new Photo())->create($image);
+            }
+
+            if ($post) {
                 return redirect()
-                    ->route('blog.admin.posts.edit', [$item->id])
+                    ->route('blog.admin.posts.edit', [$post->id])
                     ->with(['success' => 'Успішно збережено']);
             } else {
                 return back()
@@ -88,7 +105,7 @@ class PostsController extends Controller
                     ->withInput();
             }
         }else{
-            return redirect(route('blog.admin.posts.index'));
+            return view('blog.access_denied401');
         }
     }
 
@@ -101,8 +118,10 @@ class PostsController extends Controller
     public function show($id)
     {
         $post = $this->blogPostRepository->getEdit($id);
+       // $img = $this->blogPhotoRepository->getPhoto($id);
+        $img = Photo::find(2)->select('photo_path')->first();
 
-        return view('blog.user.show_post', compact('post'));
+        return view('blog.user.show_post', compact(['post', 'img']));
     }
 
     /**
@@ -123,7 +142,7 @@ class PostsController extends Controller
 
             return view('blog.admin.posts.edit', compact('item', 'categoryList'));
         }else{
-            return redirect(route('blog.admin.posts.index'));
+            return view('blog.access_denied401');
         }
     }
 
@@ -157,7 +176,7 @@ class PostsController extends Controller
                     ->withInput();
             }
         }else{
-            return redirect(route('blog.admin.posts.index'));
+            return view('blog.access_denied401');
         }
     }
 
@@ -181,7 +200,7 @@ class PostsController extends Controller
                     ->withErrors(['msg' => 'Помилка видалення']);
             }
         }else{
-            return redirect(route('blog.admin.posts.index'));
+            return view('blog.access_denied401');
         }
     }
 }

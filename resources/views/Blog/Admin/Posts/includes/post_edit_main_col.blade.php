@@ -42,7 +42,11 @@
                                       class = "form-control"
                                       rows= "20"> {{ (old('content_raw', $item->content_raw)) }} </textarea>
                         </div>
-                        <input name="img_url" type="file" class="form-control" placeholder="Image">
+                        <label for="image"> Фонова картинка</label>
+                        <input name="image"
+                               type="file"
+                               class="form-control"
+                               placeholder="image">
                     </div>
                     <div class="tab-pane" id="adddata" role="tabpanel">
                         <div class="form-group">

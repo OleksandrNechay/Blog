@@ -25,6 +25,7 @@ Route::get('dashboard', [DashboardController::class, 'dashboard'])->middleware([
 Route::get('main', [PostsController::class, 'mainPage'])->name('main');
 Route::get('show/{id}',[PostsController::class, 'show'])->name('show');
 
+
 //Адмінка
 $groupData = ['prefix' => 'admin/blog'];
 

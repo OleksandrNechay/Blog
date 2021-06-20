@@ -35,7 +35,9 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-
+    public function Photos(){
+        return $this->belongsTo(Photo::class);
+    }
 
     protected $dates = [
         'published_at'

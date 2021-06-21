@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Clean Blog - Start Bootstrap Theme</title>
     <link rel="icon" type="image/x-icon" href="{{asset('assets/favicon.ico')}}" />
     <!-- Font Awesome icons (free version)-->
@@ -26,16 +27,39 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="index.html">Home</a></li>
-                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="about.html">About</a></li>
-                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="post.html">Sample Post</a></li>
-                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="contact.html">Contact</a></li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{route('main')}}">Головна</a></li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="about.html">Категорії</a></li>
+
+
+
+                @guest
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{route('login')}}">Авторизуватись</a></li>
+                @endguest
+
+
+                @if(\Auth::check() && Auth::user()->role_id== 1 )
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{route('dashboard')}}">Адмін панель</a></li>
+                @endif
+                @if(\Auth::check())
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href=""> Профіль</a></li>
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{route('logout')}}"
+                                            onclick="event.preventDefault();
+                                             document.getElementById('logout-form').submit();">Вийти</a></li>
+
+                @endif
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
             </ul>
         </div>
     </div>
 </nav>
 <!-- Page Header-->
-<header class="masthead" style="background-image: url({{asset($img->photo_path)}})">
+@if(isset($img))
+<header class="masthead" style="background-image: url({{asset('/storage/'. $img->photo_path)}})">
+    @else
+        <header class="masthead" style="background-image: url({{asset('images/home-bg.jpg')}})">
+            @endif
 
     <div class="container position-relative px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
@@ -58,51 +82,52 @@
     <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
-               {{htmlspecialchars($post->content_raw)}}
+               {{$post->content_raw}}
 
             </div>
         </div>
     </div>
 </article>
-<!-- Footer-->
-<footer class="border-top">
-    <div class="container px-4 px-lg-5">
-        <div class="row gx-4 gx-lg-5 justify-content-center">
-            <div class="col-md-10 col-lg-8 col-xl-7">
-                <ul class="list-inline text-center">
-                    <li class="list-inline-item">
-                        <a href="#!">
+        <!-- Footer-->
+        <footer class="border-top">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <ul class="list-inline text-center">
+                            <li class="list-inline-item">
+                                <a href="#!">
                                     <span class="fa-stack fa-lg">
                                         <i class="fas fa-circle fa-stack-2x"></i>
                                         <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
                                     </span>
-                        </a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a href="#!">
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#!">
                                     <span class="fa-stack fa-lg">
                                         <i class="fas fa-circle fa-stack-2x"></i>
                                         <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
                                     </span>
-                        </a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a href="#!">
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#!">
                                     <span class="fa-stack fa-lg">
                                         <i class="fas fa-circle fa-stack-2x"></i>
                                         <i class="fab fa-github fa-stack-1x fa-inverse"></i>
                                     </span>
-                        </a>
-                    </li>
-                </ul>
-                <div class="small text-center text-muted fst-italic">Copyright &copy; Your Website 2021</div>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="small text-center text-muted fst-italic">Copyright &copy; Your Website 2021</div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</footer>
-<!-- Bootstrap core JS-->
-<script src="{{asset('https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js')}}"></script>
-<!-- Core theme JS-->
-<script src="{{asset('js/scripts.js')}}"></script>
+        </footer>
+
+        <!-- Bootstrap core JS-->
+        <script src="{{asset('https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js')}}"></script>
+        <!-- Core theme JS-->
+        <script src="{{asset('js/scripts.js')}}"></script>
 </body>
 </html>

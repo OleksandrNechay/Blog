@@ -73,7 +73,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="excerpt"> Витримка </label>
+                            <label for="excerpt"> Вирізка </label>
                             <textarea name="excerpt"
                                       id    = "excerpt"
                                       class = "form-control"

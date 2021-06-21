@@ -77,7 +77,7 @@ class PostsController extends Controller
      */
     public function store(PostCreateRequest $request)
     {
-        if(Auth::check()) {
+        if(Auth::check() && (Auth::user()->role_id == 1)) {
             $data = $request->input();
             $user = ['user_id' => Auth::user()->id];
             $result = array_merge($user, $data);
@@ -119,7 +119,10 @@ class PostsController extends Controller
     {
         $post = $this->blogPostRepository->getEdit($id);
        // $img = $this->blogPhotoRepository->getPhoto($id);
-        $img = Photo::find(2)->select('photo_path')->first();
+        $img = Photo::select('photo_path')
+            ->where('post_id', $id)
+            ->join('posts', 'posts.id', 'photos.id')
+            ->first();
 
         return view('blog.user.show_post', compact(['post', 'img']));
     }
@@ -132,7 +135,7 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        if(Auth::check()) {
+        if(Auth::check() && (Auth::user()->role_id == 1)) {
             $item = $this->blogPostRepository->getEdit($id);
             if (empty($item)) {
                 abort(404);
@@ -155,7 +158,7 @@ class PostsController extends Controller
      */
     public function update($id, PostUpdateRequest $request)
     {
-        if(Auth::check()) {
+        if(Auth::check() && (Auth::user()->role_id == 1)) {
             $item = $this->blogPostRepository->getEdit($id);
             $data = $request->all();
 
@@ -188,7 +191,7 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        if(Auth::check()) {
+        if(Auth::check() && (Auth::user()->role_id == 1)) {
             $result = Post::destroy($id);
             if ($result) {
 

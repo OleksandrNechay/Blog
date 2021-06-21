@@ -15,16 +15,16 @@ use App\Http\Controllers\Blog\Admin\CategoryController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 require __DIR__.'/auth.php';
 
 Route::get('dashboard', [DashboardController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');
 Route::get('main', [PostsController::class, 'mainPage'])->name('main');
 Route::get('show/{id}',[PostsController::class, 'show'])->name('show');
-
+Route::get('/', function () {
+    return redirect(route('main'));
+});
 
 //Адмінка
 $groupData = ['prefix' => 'admin/blog'];

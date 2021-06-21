@@ -8,6 +8,7 @@ use App\Http\Requests\CategoryUpdateRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Repositories\Blog\CategoryRepository;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -36,10 +37,14 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $item = new Category();
-        $categoryList = $this->BlogCategoryRepository->getForComboBox();
+        if(Auth::check() && (Auth::user()->role_id == 1)) {
+            $item = new Category();
+            $categoryList = $this->BlogCategoryRepository->getForComboBox();
 
-        return view('blog.admin.category.edit', compact('item', 'categoryList'));
+            return view('blog.admin.category.edit', compact('item', 'categoryList'));
+        }else{
+            return view('blog.access_denied401');
+        }
     }
 
     /**
@@ -50,17 +55,22 @@ class CategoryController extends Controller
      */
     public function store(CategoryCreateRequest $request)
     {
-        $data = $request->input();
-        $item = (new Category())->create($data);
+        if(Auth::check() && (Auth::user()->role_id == 1)) {
 
-        if($item){
-            return redirect()
-                ->route('blog.admin.categories.edit', [$item->id])
-                ->with(['success' => 'Успішно збережено']);
-        } else {
-            return back()
-                ->withErrors(['msg' => 'Помилка зберігання'])
-                ->withInput();
+            $data = $request->input();
+            $item = (new Category())->create($data);
+
+            if ($item) {
+                return redirect()
+                    ->route('blog.admin.categories.edit', [$item->id])
+                    ->with(['success' => 'Успішно збережено']);
+            } else {
+                return back()
+                    ->withErrors(['msg' => 'Помилка зберігання'])
+                    ->withInput();
+            }
+        }else{
+            return view('blog.access_denied401');
         }
 
 
@@ -85,15 +95,18 @@ class CategoryController extends Controller
      */
     public function edit($id, CategoryRepository $categoryRepository)
     {
-        $item = $this->BlogCategoryRepository->getEdit($id);
-        if(empty($item)){
-            abort(404);
+        if(Auth::check() && (Auth::user()->role_id == 1)) {
+            $item = $this->BlogCategoryRepository->getEdit($id);
+            if (empty($item)) {
+                abort(404);
+            }
+
+            $categoryList = $categoryRepository->getForComboBox();
+
+            return view('blog.admin.category.edit', compact('item', 'categoryList'));
+        }else{
+            return view('blog.access_denied401');
         }
-
-        $categoryList = $categoryRepository->getForComboBox();
-
-        return view('blog.admin.category.edit', compact('item', 'categoryList'));
-
     }
 
     /**
@@ -105,25 +118,29 @@ class CategoryController extends Controller
      */
     public function update($id, CategoryUpdateRequest $request)
     {
-        $item = $this->BlogCategoryRepository->getEdit($id);
+        if(Auth::check() && (Auth::user()->role_id == 1)) {
+            $item = $this->BlogCategoryRepository->getEdit($id);
 
-        if(empty($item)){
-            return back()
-                ->withErrors(['msg'=> "Запис id = [{$id}] не знайдено"])
-                ->withInput();
-        }
+            if (empty($item)) {
+                return back()
+                    ->withErrors(['msg' => "Запис id = [{$id}] не знайдено"])
+                    ->withInput();
+            }
 
-        $data = $request->all();
-        $result = $item->update($data);
+            $data = $request->all();
+            $result = $item->update($data);
 
-        if($result){
-            return redirect()
-                ->route('blog.admin.categories.edit', $item->id)
-                ->with(['success' => 'Успішно збережено']);
-        } else {
-            return back()
-                ->withErrors(['msg' => 'Помилка зберігання'])
-                ->withInput();
+            if ($result) {
+                return redirect()
+                    ->route('blog.admin.categories.edit', $item->id)
+                    ->with(['success' => 'Успішно збережено']);
+            } else {
+                return back()
+                    ->withErrors(['msg' => 'Помилка зберігання'])
+                    ->withInput();
+            }
+        }else{
+            return view('blog.access_denied401');
         }
     }
 

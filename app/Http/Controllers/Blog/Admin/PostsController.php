@@ -79,6 +79,7 @@ class PostsController extends Controller
     {
         if(Auth::check() && (Auth::user()->role_id == 1)) {
             $data = $request->input();
+
             $user = ['user_id' => Auth::user()->id];
             $result = array_merge($user, $data);
             $post = (new Post())->create($result);
@@ -118,11 +119,8 @@ class PostsController extends Controller
     public function show($id)
     {
         $post = $this->blogPostRepository->getEdit($id);
-       // $img = $this->blogPhotoRepository->getPhoto($id);
-        $img = Photo::select('photo_path')
-            ->where('post_id', $id)
-            ->join('posts', 'posts.id', 'photos.id')
-            ->first();
+        $img = $this->blogPhotoRepository->getImg($id);
+
 
         return view('blog.user.show_post', compact(['post', 'img']));
     }

@@ -28,9 +28,6 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ms-auto py-4 py-lg-0">
                 <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{route('main')}}">Головна</a></li>
-                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="about.html">Категорії</a></li>
-
-
 
                 @guest
                     <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{route('login')}}">Авторизуватись</a></li>
@@ -56,7 +53,7 @@
 </nav>
 <!-- Page Header-->
 @if(isset($img))
-<header class="masthead" style="background-image: url({{asset('/storage/'. $img->photo_path)}})">
+    <header class="masthead" style="background-image: url({{asset('/storage/'. $img->photo_path)}})">
     @else
         <header class="masthead" style="background-image: url({{asset('images/home-bg.jpg')}})">
             @endif
@@ -77,12 +74,13 @@
         </div>
     </div>
 </header>
+    </header>
 <!-- Post Content-->
 <article class="mb-4">
     <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
-               {{$post->content_raw}}
+                   {!! $post->content_raw !!}
 
             </div>
         </div>
@@ -131,3 +129,5 @@
         <script src="{{asset('js/scripts.js')}}"></script>
 </body>
 </html>
+
+

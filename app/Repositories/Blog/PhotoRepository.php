@@ -2,7 +2,6 @@
 namespace App\Repositories\Blog;
 
 use App\Models\Photo As Model;
-use Illuminate\Database\Eloquent\Collection;
 
 class PhotoRepository extends CoreRepository
 {
@@ -10,6 +9,13 @@ class PhotoRepository extends CoreRepository
 
         return Model::class;
     }
-
-
+    public function getImg($id)
+    {
+   $img = $this->StartConditions()
+         ->select('photo_path')
+        ->where('post_id', $id)
+        ->join('posts', 'posts.id', 'photos.id')
+        ->first();
+    return $img;
+    }
 }
